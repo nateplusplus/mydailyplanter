@@ -1,0 +1,27 @@
+// List items
+.list-item {
+  @apply border-b py-2;
+
+  &:last-child {
+    @apply border-0;
+  }
+
+  .list-item-body {
+    @apply w-full flex py-2 flex-row justify-between items-center;
+  }
+    .list-item-icon {
+      @apply mr-2 flex-none cursor-pointer;
+    }
+    .list-item-text {
+      @apply flex-1 flex-col flex-shrink;
+    }
+    .list-item-actions {
+      @apply relative flex-none;
+    }
+}
+
+ul {
+  .list-separator {
+    @apply border-b mb-2;
+  }
+}

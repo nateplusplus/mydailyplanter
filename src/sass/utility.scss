@@ -1,0 +1,78 @@
+
+// Make element fit the screen height, optimized with JS for mobile browser compatibility
+:root {
+  --vh: 100vh;
+}
+
+.fullscreen {
+  min-height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  min-height: calc(var(--vh) * 100);
+  @apply w-full flex-1 flex content-center justify-center items-center;
+}
+
+.svg-unfill {
+  fill: none;
+}
+
+.icon {
+  font-style: normal;
+}
+
+.bg-mint-green {
+  background-color: #c3e9dc; //EDFCF4 //E4F7E8
+}
+
+.bg-lime-green {
+  background-color: #E4F7E8;
+}
+
+.bg-light-blue {
+  background-color: #c3cfdf;
+}
+
+.bg-soft-blue {
+  background-color: #DCF2F9;
+}
+
+.action-link {
+  @extend .proxima-bold;
+  text-transform: uppercase;
+  font-size: .7em;
+}
+  .action-link i.icon {
+    text-transform: none;
+    font-size: 1.4em;
+  }
+
+.alert-placeholder {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  height: 1rem;
+  width: 1px;
+}
+
+span.alert-flag {
+  position: relative;
+  height: 1px;
+  width: 0px;
+  vertical-align: top;
+}
+
+span.alert-flag:not(.hidden) {
+  display: inline-block;
+}
+
+.alert-flag.alert-flag-active:before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: #e56e4e;
+  display: block;
+  position: absolute;
+  right: 4px;
+  top: 0px;
+  margin-right: 100%;
+  margin-top: 25%;
+  border-radius: 50%;
+}

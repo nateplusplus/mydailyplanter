@@ -1,0 +1,168 @@
+
+.modalfade-enter-active {
+  .modal-container {
+    animation: drop-in 300ms ease;
+  }
+}
+.modalfade-enter-to {
+  animation: fade-in 300ms ease;
+}
+
+.modalfade-leave-active {
+  .modal-container {
+    // animation: bounce-out 300ms ease;
+  }
+}
+.modalfade-leave-to {
+  animation: fade-out 200ms ease;
+  // animation-delay: 50ms;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+
+
+
+
+.drop-enter-active {
+  animation: drop-in 300ms ease;
+}
+.drop-leave-active {
+  animation: bounce-out 500ms ease;
+  animation-fill-mode: forwards;
+}
+
+@keyframes drop-in {
+  0% {
+    opacity: 0.5;
+    transform: translateY(-1000px);
+  }
+  50% {
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes bounce-out {
+  0% {
+    transform: translateY(0px);
+  }
+  15% {
+    transform: translateY(100px);
+  }
+  25% {
+    transform: translateY(90px);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateY(-400px);
+  }
+}
+
+
+
+
+
+.dropdown-enter-active {
+  animation: drop-down 300ms ease;
+  animation-fill-mode: forwards;
+  transform-origin: center top;
+}
+.dropdown-leave-active {
+  animation: pull-up 150ms;
+  animation-fill-mode: forwards;
+  transform-origin: center top;
+}
+
+@keyframes drop-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scaleY(0.2);
+  }
+  50% {
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(10px) scaleY(1);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pull-up {
+  0% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(0.95);
+  }
+}
+
+
+
+
+.stretchdown-enter-active {
+  animation: stretch-down 300ms ease;
+  animation-fill-mode: forwards;
+  transform-origin: center top;
+}
+.stretchdown-leave-active {
+  animation: stretch-up 150ms;
+  animation-fill-mode: forwards;
+  transform-origin: center top;
+}
+
+@keyframes stretch-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scaleY(0.2);
+  }
+  50% {
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(20px) scaleY(1.3);
+  }
+  100% {
+    transform: translateY(0px) scaleY(1);
+  }
+}
+
+@keyframes stretch-up {
+  0% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(0.95);
+  }
+}

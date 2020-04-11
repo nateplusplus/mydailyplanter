@@ -1,3 +1,133 @@
-body {
-    color: red !important;
+/**
+ * This injects Tailwind's base styles, which is a combination of
+ * Normalize.css and some additional base styles.
+ *
+ * You can see the styles here:
+ * https://github.com/tailwindcss/tailwindcss/blob/master/css/preflight.css
+ *
+ * If using `postcss-import`, use this import instead:
+ *
+ * @import "tailwindcss/preflight";
+ */
+@tailwind base;
+
+/**
+ * This injects any component classes registered by plugins.
+ *
+ * If using `postcss-import`, use this import instead:
+ *
+ * @import "tailwindcss/components";
+ */
+@tailwind components;
+
+/**
+ * Here you would add any of your custom component classes; stuff that you'd
+ * want loaded *before* the utilities so that the utilities could still
+ * override them.
+ *
+ * Example:
+ *
+ * .btn { ... }
+ * .form-input { ... }
+ *
+ * Or if using a preprocessor or `postcss-import`:
+ *
+ * @import "components/buttons";
+ * @import "components/forms";
+ */
+
+ // Some nicer styling for accessibility
+ button:focus {
+   outline: 1px solid #DDD;
+ }
+ input:focus {
+   outline: 1px solid #AAA;
+ }
+
+ a {
+   color: #333;
+   font-weight: 600;
+ }
+
+ p {
+   margin: 1em 0px;
+ }
+
+
+/**
+ * This injects all of Tailwind's utility classes, generated based on your
+ * config file.
+ *
+ * If using `postcss-import`, use this import instead:
+ *
+ * @import "tailwindcss/utilities";
+ */
+@tailwind utilities;
+
+/**
+ * Here you would add any custom utilities you need that don't come out of the
+ * box with Tailwind.
+ *
+ * Example :
+ *
+ * .bg-pattern-graph-paper { ... }
+ * .skew-45 { ... }
+ *
+ * Or if using a preprocessor or `postcss-import`:
+ *
+ * @import "utilities/background-patterns";
+ * @import "utilities/skew-transforms";
+**/
+
+// Fonts
+@import 'fonts';
+
+// Custom utility classes
+@import 'utility';
+
+
+// Containers
+.site-container {
+  @apply bg-grey-lightest min-h-screen flex flex-col items-stretch;
 }
+
+
+// Modals
+.modal {
+  @apply fixed w-full min-h-full flex flex-col justify-center items-center z-40;
+}
+
+#page-home,
+#app-view,
+#page-contact,
+#page-404,
+#page-forgot-password,
+#page-reset-password {
+  background: #fafbfb url(../images/dp-plants-bg-sm.png) center bottom no-repeat;
+  background-size: contain;
+
+  @screen sm {
+    background: #fafbfb url(../images/dp-plants-bg.png) center bottom no-repeat;
+    background-size: cover;
+  }
+  @screen lg {
+    background-size: contain;
+  }
+  @screen xl {
+    background-size: cover;
+  }
+}
+
+@import 'home';
+@import 'navbar';
+@import 'forms';
+@import 'lists';
+@import 'datepicker';
+@import 'animations';
+
+
+footer {
+  @apply p-6 py-8 bg-grey-dark text-grey-lighter flex text-sm;
+}
+
+

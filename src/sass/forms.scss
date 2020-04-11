@@ -1,0 +1,72 @@
+// Forms
+fieldset {
+  @apply mb-2;
+}
+
+
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'] {
+
+  &.input {
+    @apply border border-grey-light;
+  }
+
+  &.input-v {
+    @apply my-4 p-2;
+  }
+
+  &.input-full {
+    @apply block w-full;
+  }
+
+  &.input-lg {
+    @apply my-4 p-3 text-lg;
+
+    @screen sm {
+      @apply p-4;
+    }
+  }
+}
+
+
+// Buttons
+.btn {
+  @apply border border-grey-dark px-3 py-2 text-lg my-2 font-bold shadow;
+}
+  .btn-green {
+    @apply bg-green text-grey-lightest;
+  }
+  .btn-lg {
+    @apply px-5 py-4 text-2xl;
+  }
+
+// Dropdowns
+.dropdown-toggle {
+  @apply w-8 h-8 flex-col justify-center items-center;
+}
+  .dropdown-toggle:hover,
+  .dropdown-toggle:active,
+  .dropdown-toggle:focus {
+    @apply text-grey;
+  }
+  .dropdown-menu {
+    @apply absolute bg-white border rounded z-10 py-2;
+    right: 0;
+    margin-top: -2px;
+
+    li {
+      @apply text-sm text-center;
+    }
+  }
+
+
+  .agreement {
+    input[type='checkbox'] {
+      @apply inline-block p-4 text-lg border border-grey-light align-top;
+    }
+    .agreement-text {
+      @apply inline-block w-5/6 px-2 align-top;
+    }
+  }

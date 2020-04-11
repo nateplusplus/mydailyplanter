@@ -1,0 +1,74 @@
+#page-home.fullscreen {
+  min-height: calc((var(--vh) * 100) - 4rem);
+}
+
+.showcase {
+  @extend .proxima-light;
+
+  .showcase-panel {
+    @apply flex flex-col w-full items-center;
+
+    @screen xxl {
+      @apply px-32;
+    }
+
+    @screen md {
+      @apply flex-row;
+    }
+
+    .figure {
+      @apply w-full;
+      min-height:250px;
+
+      @screen md {
+        @apply w-1/2 flex-none;
+        height: calc(var(--vh) * 100);
+      }
+    }
+    .figure-text {
+      @apply p-2 px-6 text-xl leading-normal;
+
+      @screen md {
+        @apply p-12 pr-24 text-2xl;
+      }
+    }
+    button {
+      @apply inline-block border border-grey-dark px-5 py-4 text-2xl my-2 bg-green text-grey-lightest font-bold shadow;
+    }
+  }
+
+  .action-link a {
+    @apply no-underline;
+  }
+}
+
+
+.figure-1 {
+  background: url(../images/schedules-1-sm.png) center center no-repeat;
+  background-size: contain;
+  max-width: 800px;
+
+  @screen md {
+    background: url(../images/schedules-1.png) center center no-repeat;
+    background-size: contain;
+  }
+}
+.figure-2 {
+  background: url(../images/water-tracking-1-sm.png) center center no-repeat;
+  background-size: contain;
+  max-width: 800px;
+
+  @screen md {
+    background: url(../images/water-tracking-1.png) center center no-repeat;
+    background-size: contain;
+  }
+}
+.figure-3 {
+  background: url(../images/over-under-1-sm.png) center center no-repeat;
+  background-size: contain;
+  max-width: 800px;
+  @screen md {
+    background: url(../images/over-under-1.png) center center no-repeat;
+    background-size: contain;
+  }
+}
