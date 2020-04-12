@@ -9,14 +9,21 @@ import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 
-import Header from "./header"
+import Navbar from "./navbar"
 
 const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
+    query SiteDataQuery {
       site {
         siteMetadata {
           title
+        }
+      }
+      siteLogo: file(relativePath: { eq: "logo1-sm.png" }) {
+        childImageSharp {
+          fixed( height: 36 ) {
+            ...GatsbyImageSharpFixed
+          }
         }
       }
     }
@@ -24,7 +31,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata.title} />
+      <Navbar siteTitle={data.site.siteMetadata.title} siteLogo={ data.siteLogo.childImageSharp.fixed } />
       <main>{children}</main>
       <footer>
         © {new Date().getFullYear()} Nathan Blair
