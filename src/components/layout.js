@@ -7,41 +7,45 @@
 
 import React from "react"
 import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
 
 import Navbar from "./navbar"
+import Login from "./login"
+import Modal from "./modal"
 
-const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteDataQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-      siteLogo: file(relativePath: { eq: "logo1-sm.png" }) {
-        childImageSharp {
-          fixed( height: 36 ) {
-            ...GatsbyImageSharpFixed
-          }
-        }
-      }
+class Layout extends React.Component {
+
+  constructor( props ) {
+    super(props)
+    this.state = {
+      modalIsToggled : true,
     }
-  `)
 
-  return (
-    <>
-      <Navbar siteTitle={data.site.siteMetadata.title} siteLogo={ data.siteLogo.childImageSharp.fixed } />
-      <main>{children}</main>
-      <footer>
-        © {new Date().getFullYear()} Nathan Blair
-      </footer>
-    </>
-  )
+  }
+
+  toggleModal = () => {
+    console.log('toggleModal');
+    this.setState({ modalIsToggled : !this.state.modalIsToggled });
+  }
+
+  render() {
+    return (
+      <>
+        <Modal isToggled={ this.state.modalIsToggled } handleClose={ this.toggleModal }>
+          <Login />
+        </Modal>
+        <Navbar siteTitle={ this.props.metadata.site.siteMetadata.title } siteLogo={ this.props.metadata.siteLogo.childImageSharp.fixed } />
+        <main>{this.props.children}</main>
+        <footer>
+          © {new Date().getFullYear()} Nathan Blair
+        </footer>
+      </>
+    )
+  }
 }
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
+  metadata: PropTypes.object.isRequired
 }
 
 export default Layout

@@ -31,3 +31,19 @@
   }
 
 }
+
+// Styles for nav menu toggling and motion design
+#navbar {
+  .navbar-menu {
+    opacity: 1;
+    max-height: 300px;
+    overflow-y: hidden;
+    transition: opacity 150ms ease, max-height 300ms ease-in-out;
+
+    &.nav-collapsed {
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 300ms ease-in-out, opacity 300ms ease 200ms;
+    }
+  }
+}

@@ -1,30 +1,6 @@
-
-.modalfade-enter-active {
-  .modal-container {
-    animation: drop-in 300ms ease;
-  }
-}
-.modalfade-enter-to {
-  animation: fade-in 300ms ease;
-}
-
-.modalfade-leave-active {
-  .modal-container {
-    // animation: bounce-out 300ms ease;
-  }
-}
-.modalfade-leave-to {
-  animation: fade-out 200ms ease;
-  // animation-delay: 50ms;
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.fade-out {
+  animation: fade-out 300ms ease 100ms;
+  animation-fill-mode: forwards;
 }
 
 @keyframes fade-out {
@@ -37,21 +13,17 @@
 }
 
 
-
-
-
-
-.drop-enter-active {
+.drop-enter {
   animation: drop-in 300ms ease;
 }
-.drop-leave-active {
+.drop-leave {
   animation: bounce-out 500ms ease;
   animation-fill-mode: forwards;
 }
 
 @keyframes drop-in {
   0% {
-    opacity: 0.5;
+    opacity: 0;
     transform: translateY(-1000px);
   }
   50% {
@@ -72,15 +44,12 @@
   15% {
     transform: translateY(100px);
   }
-  25% {
-    transform: translateY(90px);
-  }
-  75% {
+  50% {
     opacity: 1;
   }
   100% {
-    opacity: 0.5;
-    transform: translateY(-400px);
+    opacity: 0;
+    transform: translateY(-600px);
   }
 }
 
