@@ -1,7 +1,6 @@
 import firebase from "gatsby-plugin-firebase"
 
-// handleLogin
-const handleLogin = ( state, success, fail ) => {
+export const handleLogin = ( state, success, fail ) => {
     firebase
         .auth()
         .signInWithEmailAndPassword( state.username, state.password )
@@ -12,4 +11,14 @@ const handleLogin = ( state, success, fail ) => {
         })
 }
 
-export default handleLogin;
+
+export const handleSignup = ( state, success, fail ) => {
+    firebase
+        .auth()
+        .createUserWithEmailAndPassword( state.username, state.password )
+        .then( function( result ) {
+            success( result.user );
+        }).catch( function( error ) {
+            fail( error );
+        })
+}

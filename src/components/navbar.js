@@ -1,4 +1,3 @@
-import PropTypes from "prop-types"
 import React from "react"
 
 import { Link } from "gatsby"
@@ -13,7 +12,8 @@ class Navbar extends React.Component {
   constructor( props ) {
     super(props)
     this.state = {
-      navCollapsed : true
+      navCollapsed : true,
+      isLoggedIn   : false
     }
   }
 
@@ -30,8 +30,12 @@ class Navbar extends React.Component {
       menuClass += " nav-collapsed";
     }
 
+    if ( typeof this.props.userData.uid !== 'undefined' && this.state.isLoggedIn === false ) {
+      this.setState( { isLoggedIn : true } );
+    }
+
     return (
-      <div id="navbar">
+      <nav role="menubar" id="navbar">
         <div>
           <Link to="/">
             <Img
@@ -47,10 +51,10 @@ class Navbar extends React.Component {
             <img src={ menuIcon } alt="toggle the navigation menu" />
           </button>
           <div className={ menuClass }>
-            <DropdownMenu isLoggedIn={true} />
+            <DropdownMenu isLoggedIn={this.state.isLoggedIn} toggleModal={ this.props.toggleModal } />
           </div>
         </div>
-      </div>
+      </nav>
     )
   } 
 }

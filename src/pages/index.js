@@ -1,7 +1,7 @@
 import React from "react"
 // import { Link } from "gatsby"
 
-import PageWrapper from "../components/PageWrapper"
+import PageWrapper from "../components/pageWrapper"
 import SEO from "../components/seo"
 
 import "../sass/main.scss";

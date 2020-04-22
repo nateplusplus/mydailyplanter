@@ -1,13 +1,15 @@
 import React from "react"
-import { handleLogin } from "../services/auth"
+import { handleSignup } from "../services/auth"
 
 const defaultState = {
-    username: ``,
-    password: ``,
-    errorCode: '',
+    firstname : ``,
+    lastname  : ``,
+    username  : ``,
+    password  : ``,
+    errorCode : '',
 }
 
-class Login extends React.Component {
+class SignUp extends React.Component {
     constructor( props ) {
         super(props)
         this.state = defaultState
@@ -38,7 +40,7 @@ class Login extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault()
-        handleLogin( this.state, this.handleSuccess, this.handleFailure )
+        handleSignup( this.state, this.handleSuccess, this.handleFailure )
     }
 
     getErrorMessage = () => {
@@ -70,11 +72,10 @@ class Login extends React.Component {
  
         return (
             <form
-                id="form-signin"
+                id="form-signup"
                 method="post"
                 onSubmit={ event => {
                     this.handleSubmit( event )
-                    // navigate(`/app/profile`)
                 }}
             >
                 <fieldset className="mb-4">
@@ -87,6 +88,28 @@ class Login extends React.Component {
                             Oops! { this.getErrorMessage() }
                         </small>
                     </span>
+
+                    <input
+                        id="firstname"
+                        type="text"
+                        name="firstname"
+                        required
+                        value={ this.state.firstname }
+                        onChange={this.handleUpdate}
+                        placeholder="First Name"
+                        className="input input-v input-full input-lg"
+                    />
+
+                    <input
+                        id="lastname"
+                        type="text"
+                        name="lastname"
+                        required
+                        value={ this.state.lastname }
+                        onChange={this.handleUpdate}
+                        placeholder="Last Name"
+                        className="input input-v input-full input-lg"
+                    />
 
                     <input
                         id="login_email"
@@ -107,9 +130,22 @@ class Login extends React.Component {
                         placeholder="Your Password"
                         className="input input-v input-full input-lg"
                     />
+                </fieldset>
+                <fieldset>
+                    <div className="agreement">
+                        <input
+                            type="checkbox"
+                            name="password"
+                            v-model="guest.tos"
+                            required
+                            aria-label="Check if you agree to the Terms of Use and have read the Privacy Policy." />
 
-                    <small className="block text-right"><a href="#">Forgot Password</a></small>
-
+                        <small className="agreement-text">
+                            I acknowledge that I agree to the <a rel="nofollow noopener noreferrer" href="https://app.termly.io/document/terms-of-use-for-website/5eda962d-30b4-46bd-a198-969858a31a3f" target="_blank">Terms of Use</a> and have read the <a rel="nofollow noopener noreferrer" href="https://s3-us-west-2.amazonaws.com/mydp-docs/privacy.pdf" target="_blank">Privacy Policy</a>.
+                        </small>
+                    </div>
+                </fieldset>
+                <fieldset>
                     <div className="text-center">
                         <button
                             id="form-signin-submit"
@@ -120,9 +156,10 @@ class Login extends React.Component {
                         </button>
                     </div>
                 </fieldset>
+                <p className="text-center">Do we already know you? <a href="#signin">Sign In</a></p>
             </form>
         )
     }
 }
 
-export default Login
+export default SignUp
