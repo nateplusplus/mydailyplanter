@@ -1,11 +1,11 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-const DropdownMenu = ( { isLoggedIn, toggleModal } ) => {
+const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
 	if ( isLoggedIn ) {
 		return (
 			<ul role="menu" className="list-reset p-3 text-right">
-				<li className="py-1 mb-2"><b>Hi, NAME</b></li>
+				<li className="py-1 mb-2"><b>Hi, { userData.firstname }</b></li>
 				<li role="none" className="py-1">
 					<a href="#myPlants" role="menuitem">My Plants</a>
 				</li>
@@ -40,8 +40,9 @@ const DropdownMenu = ( { isLoggedIn, toggleModal } ) => {
 }
 
 DropdownMenu.propTypes = {
-	isLoggedIn: PropTypes.bool.isRequired,
-	toggleModal: PropTypes.func.isRequired,
+	isLoggedIn  : PropTypes.bool.isRequired,
+	toggleModal : PropTypes.func.isRequired,
+	userData    : PropTypes.object
 }
 
 export default DropdownMenu;

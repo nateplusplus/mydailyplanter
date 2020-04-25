@@ -51,7 +51,7 @@ class Navbar extends React.Component {
             <img src={ menuIcon } alt="toggle the navigation menu" />
           </button>
           <div className={ menuClass }>
-            <DropdownMenu isLoggedIn={this.state.isLoggedIn} toggleModal={ this.props.toggleModal } />
+            <DropdownMenu isLoggedIn={this.state.isLoggedIn} toggleModal={ this.props.toggleModal } userData={ this.props.userData } />
           </div>
         </div>
       </nav>

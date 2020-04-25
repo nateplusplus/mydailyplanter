@@ -19,7 +19,7 @@ class Layout extends React.Component {
     super(props)
     this.state = {
       modalIsToggled : false,
-      userData       : ``,
+      userData       : {},
       modalData      : {
         name  : 'signin',
         title : 'Sign In'

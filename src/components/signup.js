@@ -2,10 +2,11 @@ import React from "react"
 import { handleSignup } from "../services/auth"
 
 const defaultState = {
-    firstname : ``,
-    lastname  : ``,
-    username  : ``,
-    password  : ``,
+    firstname : '',
+    lastname  : '',
+    username  : '',
+    password  : '',
+    tos       : false,
     errorCode : '',
 }
 
@@ -19,9 +20,10 @@ class SignUp extends React.Component {
 
     handleUpdate = event => {
         var eventState = this.state[event.target.name]
-        if ( typeof eventState !==  'undefined' && eventState !== event.target.value ) {
+        var value      = ( event.target.type === 'checkbox' ) ? event.target.checked : event.target.value;
+        if ( typeof eventState !==  'undefined' && eventState !== value ) {
             this.setState({
-              [event.target.name] : event.target.value,
+              [event.target.name] : value,
             })
         }
     }
@@ -33,6 +35,7 @@ class SignUp extends React.Component {
 
     handleFailure = errorData => {
         // TODO: handle common errors on UI: https://firebase.google.com/docs/reference/js/firebase.auth.Error
+        console.error( errorData );
         this.setState({
             errorCode : errorData.code
         });
@@ -50,10 +53,13 @@ class SignUp extends React.Component {
             
             switch ( this.state.errorCode ) {
                 case 'auth/invalid-email' :
-                    errorMessage = "Invalid email."
+                    errorMessage = "Oops! Invalid email."
                     break
                 case 'auth/wrong-password' :
-                    errorMessage = "Wrong username or password."
+                    errorMessage = "Oops! Wrong username or password."
+                    break
+                case 'auth/email-already-in-use':
+                    errorMessage = "Oops! This email address is already in use. Try signing in, or click Forgot Password to reset your password."
                     break
                 default:
                     errorMessage = "Something went wrong when attempting to login, please try again or contact support."
@@ -85,7 +91,7 @@ class SignUp extends React.Component {
                             id="form-errors"
                             className="block p-2 w-full mx-auto text-red-light border border-red-lighter bg-red-lightest text-sm"
                         >
-                            Oops! { this.getErrorMessage() }
+                            { this.getErrorMessage() }
                         </small>
                     </span>
 
@@ -135,8 +141,9 @@ class SignUp extends React.Component {
                     <div className="agreement">
                         <input
                             type="checkbox"
-                            name="password"
-                            v-model="guest.tos"
+                            name="tos"
+                            checked={ this.state.tos }
+                            onChange={ this.handleUpdate }
                             required
                             aria-label="Check if you agree to the Terms of Use and have read the Privacy Policy." />
 
