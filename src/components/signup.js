@@ -159,7 +159,7 @@ class SignUp extends React.Component {
                             type="submit"
                             className="btn btn-green btn-lg"
                         >
-                            Sign In
+                            Sign Up
                         </button>
                     </div>
                 </fieldset>

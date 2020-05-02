@@ -13,6 +13,8 @@ import Login from "./login"
 import SignUp from "./signup"
 import Modal from "./modal"
 
+var jwt = require('jsonwebtoken');
+
 class Layout extends React.Component {
 
   constructor( props ) {
@@ -50,7 +52,22 @@ class Layout extends React.Component {
       modalIsToggled : false
     });
 
+    var token = jwt.sign( userData, 'secret' );
+    localStorage.setItem( 'dp_auth', token );
+
     // navigate(`/app/profile`)
+  }
+
+  getUserSession = () => {
+    var userSession = localStorage.getItem( 'dp_auth' );
+    if ( userSession ) {
+      var userData = jwt.verify( userSession, 'secret' );
+      this.setState({ userData : userData });
+    }
+  }
+
+  componentDidMount = () => {
+    this.getUserSession();
   }
 
   render() {
