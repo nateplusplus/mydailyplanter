@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { Link } from "gatsby"
 
 const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
 	if ( isLoggedIn ) {
@@ -7,7 +8,7 @@ const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
 			<ul role="menu" className="list-reset p-3 text-right">
 				<li className="py-1 mb-2"><b>Hi, { userData.firstname }</b></li>
 				<li role="none" className="py-1">
-					<a href="#myPlants" role="menuitem">My Plants</a>
+					<Link to="/plants">My Plants</Link>
 				</li>
 				<li role="none" className="py-1">
 					<a href="#settings" role="menuitem"><span className="alert-flag alert-flag-active"></span>Settings</a>

@@ -7,6 +7,7 @@
 
 import React from "react"
 import PropTypes from "prop-types"
+import { navigate } from "gatsby"
 
 import Navbar from "./navbar"
 import Login from "./login"
@@ -55,7 +56,7 @@ class Layout extends React.Component {
     var token = jwt.sign( userData, 'secret' );
     localStorage.setItem( 'dp_auth', token );
 
-    // navigate(`/app/profile`)
+    navigate(`/plants`)
   }
 
   getUserSession = () => {
