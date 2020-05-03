@@ -1,12 +1,7 @@
 
-// Make element fit the screen height, optimized with JS for mobile browser compatibility
-:root {
-  --vh: 100vh;
-}
 
 .fullscreen {
   min-height: 100vh; /* Fallback for browsers that do not support Custom Properties */
-  min-height: calc(var(--vh) * 100);
   @apply w-full flex-1 flex content-center justify-center items-center;
 }
 
