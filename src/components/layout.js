@@ -5,7 +5,7 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { navigate } from "gatsby"
 
@@ -16,7 +16,7 @@ import Modal from "./modal"
 
 var jwt = require('jsonwebtoken');
 
-class Layout extends React.Component {
+class Layout extends Component {
 
   constructor( props ) {
     super(props)
@@ -94,7 +94,7 @@ class Layout extends React.Component {
           toggleModal={ this.toggleModal }
           userData={ this.state.userData }
         />
-        <main>{this.props.children}</main>
+        <main>{ this.props.children }</main>
         <footer>
           © {new Date().getFullYear()} Nathan Blair
         </footer>
@@ -104,7 +104,6 @@ class Layout extends React.Component {
 }
 
 Layout.propTypes = {
-  children: PropTypes.node.isRequired,
   metadata: PropTypes.object.isRequired
 }
 

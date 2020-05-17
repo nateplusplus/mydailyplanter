@@ -14,8 +14,4 @@ const PageWrapper = ( {children} ) => {
     )
 }
 
-PageWrapper.propTypes = {
-    children: PropTypes.node.isRequired,
-}
-
 export default PageWrapper;
