@@ -23,15 +23,17 @@ class Navbar extends React.Component {
     }))
   }
 
+  componentDidUpdate() {
+    if ( typeof this.props.userData.uid !== 'undefined' && this.state.isLoggedIn === false ) {
+      this.setState( { isLoggedIn : true } );
+    }
+  }
+
   render() {
 
     var menuClass = "navbar-menu";
     if ( this.state.navCollapsed ) {
       menuClass += " nav-collapsed";
-    }
-
-    if ( typeof this.props.userData.uid !== 'undefined' && this.state.isLoggedIn === false ) {
-      this.setState( { isLoggedIn : true } );
     }
 
     return (

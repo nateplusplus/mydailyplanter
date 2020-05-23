@@ -15,7 +15,8 @@ class PlantsPage extends React.Component {
     this.state = {
       userData   : {
         uid : 'oWmX4c54Frh1xLVSnSd9jt4O8Pc2'
-      }
+      },
+      userPlants : {}
     }
   }
 
@@ -30,25 +31,33 @@ class PlantsPage extends React.Component {
   }
 
   getUserPlantList() {
-    if ( this.state.userPlants && this.state.userPlants.length > 0 ) {
-      let plantList = [];
+    let plantList = [];
+    if ( this.state.userPlants && Object.keys( this.state.userPlants ).length > 0 ) {
       for ( var index in this.state.userPlants ) {
         let plant = this.state.userPlants[index];
-        console.log( plant );
-        plantList.push(<PlantListItem key={index} name={plant.name} />);
+        plantList.push(<PlantListItem key={index} plantId={index} name={plant.name} />);
       }
-      return plantList;
     }
+    return plantList;
   }
 
   handleFailure( error ) {
     console.error( error );
   }
 
-  componentDidMount () {
+  getUserPlants() {
     if ( this.state.userData && this.state.userData.uid ) {
-      getPlants( this.state.userData, this.setUserPlants.bind(this), this.handleFailure );
+      getPlants( this.state.userData.uid, this.setUserPlants.bind(this), this.handleFailure );
     }
+  }
+
+  handlePlantAdded( results ) {
+    // console.log( 'results plant added:', results );
+    this.getUserPlants();
+  }
+
+  componentDidMount () {
+    this.getUserPlants();
   }
 
   render () {
@@ -58,11 +67,11 @@ class PlantsPage extends React.Component {
         <div id="app-view" className="plants-list w-full flex-1">
           <div className="py-2 pb-24 lg:py-12 xl:py-20">
             <div className="max-w-lg mx-auto bg-grey-lighter border border-grey-light shadow py-4 px-6">
-              <AddPlantForm />
+              <AddPlantForm userId={ this.state.userData.uid } success={ this.handlePlantAdded.bind( this ) } />
               <div className="plantList">
                 <small className="text-grey-dark">
                   Tap <svg
-                    className="w-3 h-3 stroke-current fill-current text-blue svg-unfill"
+                    className="w-3 h-3 stroke-current fill-current text-blue svg-unfill inline"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     strokeWidth="2"

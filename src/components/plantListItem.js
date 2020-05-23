@@ -1,22 +1,76 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 
+import { createPlantLog, getPlantLogsByPlantId, getLastWateredLog } from "../services/plantlogs"
+
+const defaultState = {
+    lastWatered : 'Never', //'Jan 27th, 2020'
+    plantLogs   : {}
+} 
+
 class PlantListItem extends Component {
 
     constructor( props ) {
         super( props )
-        this.state = {
-            lastWatered : 'Jan 27th, 2020'
+        this.state = defaultState;
+    }
+
+    handleWaterAction() {
+        createPlantLog( this.props.plantId, 'watered', this.handleSuccess.bind( this ), this.handleFailure.bind( this ) );
+    }
+
+    handleSuccess( response ) {
+        this.getPlantLogs();
+        this.getLastWateredLog();
+    }
+
+    handleFailure( error ) {
+        console.error( 'Error creating plant log: ', error );
+    }
+
+    setPlantLogs( plantLogs ) {
+        this.setState( { plantLogs } );
+    }
+
+    getPlantLogs() {
+        getPlantLogsByPlantId( this.props.plantId, this.setPlantLogs.bind( this ), this.handleFailure.bind( this ) );
+    }
+
+    getLastWateredLog() {
+        getLastWateredLog( this.props.plantId, this.setLastWatered.bind( this ), this.handleFailure.bind( this ) );
+    }
+
+    setLastWatered( results ) {
+        let dateString = defaultState.lastWatered;
+
+        if ( results ) {
+            const keys        = Object.keys( results );
+            const lastWatered = results[ keys[0] ];
+            if ( lastWatered && lastWatered.hasOwnProperty( 'created' ) ) {
+                let date = new Date( lastWatered.created );
+                dateString = date.toDateString();
+            }
         }
+        if ( this.state.lastWatered !== dateString ) {
+            this.setState( { lastWatered : dateString });
+        }
+    }
+
+    componentDidMount() {
+        this.getPlantLogs();
+        this.getLastWateredLog();
     }
 
     render() {
         return (
             <div className="list-item">
                 <div className="list-item-body">
-                    <div className="list-item-icon">
+                    <div
+                        className="list-item-icon"
+                        onClick={ this.handleWaterAction.bind( this ) }
+                    >
                         <svg
-                            className="w-8 h-8 stroke-current fill-current text-blue"
+                            className="w-8 h-8 stroke-current fill-current text-blue svg-unfill"
                             alt="Click to water plant"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"

@@ -15,23 +15,24 @@ class AddPlantForm extends React.Component {
     resetState = () => this.setState( defaultState )
 
     handleUpdate = event => {
-        // ..
-    }
-
-    handleSuccess = userData => {
-        // ..
-    }
-
-    handleFailure = errorData => {
-        // ..
+        this.setState({
+            name : event.target.value
+        });
     }
 
     handleSubmit = event => {
-        // ..
+        if ( this.state.name && typeof this.state.name !== 'undefined' && this.state.name !== '' ) {
+            createPlant( this.props.userId, this.state.name, this.handleSuccess, this.handleFailure );
+        }
     }
 
-    getErrorMessage = () => {
-        // ..
+    handleSuccess = ( result ) => {
+        this.setState( defaultState );
+        this.props.success( result );
+    }
+
+    handleFailure = errorData => {
+        console.error( 'Error saving new plant', errorData );
     }
 
     render() {
@@ -50,6 +51,7 @@ class AddPlantForm extends React.Component {
                     <button
                         type="button"
                         name="add-plant-submit"
+                        onClick={ this.handleSubmit }
                         className="border p-2 w-8 bg-grey-lighter hover:bg-blue-light flex-no-shrink"
                         >+</button>
                 </div>

@@ -1,7 +1,6 @@
 import firebase from "gatsby-plugin-firebase"
 
-export const getPlants = ( userData, success, fail ) => {
-    const userId    = userData.uid;
+export const getPlants = ( userId, success, fail ) => {
     firebase.database().ref( 'Plants/' + userId ).once('value').then( function( snapshot ) {
         success( snapshot.val() );
     }).catch( function( error ) {
@@ -10,13 +9,19 @@ export const getPlants = ( userData, success, fail ) => {
 
 }
 
-export const createPlant = ( userData, success, fail ) => {
-    const userId    = userData.uid;
-    // TODO: Create a new plant in Firebase
+export const createPlant = ( userId, plantName, success, fail ) => {
+    const newPlant = makePlantObjectFromData( plantName );
+    firebase
+        .database()
+        .ref( 'Plants/' + userId )
+        .push( newPlant )
+        .then( success )
+        .catch( fail );
 }
 
-export const makePlantObjectFromData = ( userId, userData ) => {
+export const makePlantObjectFromData = ( plantName ) => {
     return {
-        // TODO: Plant structure here
+        created  : Date.now(),
+        name     : plantName
     }
 }
