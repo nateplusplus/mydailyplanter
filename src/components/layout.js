@@ -53,7 +53,7 @@ class Layout extends Component {
       modalIsToggled : false
     });
 
-    var token = jwt.sign( userData, 'secret' );
+    var token = jwt.sign( userData, process.env.FIRESTORE_KEY );
     localStorage.setItem( 'dp_auth', token );
 
     navigate(`/plants`)
@@ -62,8 +62,12 @@ class Layout extends Component {
   getUserSession = () => {
     var userSession = localStorage.getItem( 'dp_auth' );
     if ( userSession ) {
-      var userData = jwt.verify( userSession, 'secret' );
-      this.setState({ userData : userData });
+      try {
+        var userData = jwt.verify( userSession, process.env.FIRESTORE_KEY );
+        this.setState({ userData : userData });
+      } catch ( error ) {
+        console.warn( 'Your session has expired. Please log in again.' );
+      }
     }
   }
 

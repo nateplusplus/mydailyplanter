@@ -5,7 +5,9 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "firebase": "^7.13.2",
+    "fs": "0.0.1-security",
     "gatsby": "^2.20.12",
     "gatsby-image": "^2.3.2",
     "gatsby-plugin-firebase": "^0.2.0-beta.4",
