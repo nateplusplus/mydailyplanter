@@ -9,60 +9,72 @@ import { getPlants, removePlant } from "../services/userplants"
 
 import "../sass/main.scss";
 
+var jwt = require('jsonwebtoken');
+
 class PlantsPage extends React.Component {
   constructor( props ) {
     super(props)
     this.state = {
-      userData   : {
-        uid : 'oWmX4c54Frh1xLVSnSd9jt4O8Pc2'
-      },
+      userData   : {},
       userPlants : {}
     }
   }
 
-  setUserPlants( plants ) {
+  getUserSessionAndPlants = () => {
+    var userSession = localStorage.getItem( 'dp_auth' );
+    if ( userSession ) {
+      jwt.verify( userSession, process.env.JWT_KEY, ( err, decoded ) => {
+        if ( err ) {
+          console.warn( '2 Your session has expired. Please log in again.' );
+        } else {
+          this.setState({ userData : decoded }, this.getUserPlants );
+        }
+      } );
+    }
+  }
+
+  setUserPlants = ( plants ) => {
     this.setState( {
       userPlants: plants
     });
   }
 
-  setUserData() {
-    // TODO: How do we get this from a layout compondent???
-  }
-
-  getUserPlantList() {
+  getUserPlantList = () => {
     let plantList = [];
     if ( this.state.userPlants && Object.keys( this.state.userPlants ).length > 0 ) {
       for ( var index in this.state.userPlants ) {
         let plant = this.state.userPlants[index];
-        plantList.push(<PlantListItem key={index} plantId={index} name={plant.name} deletePlant={ this.deletePlant.bind( this ) } />);
+        plantList.push(<PlantListItem key={index} plantId={index} name={plant.name} deletePlant={ this.deletePlant } />);
       }
     }
     return plantList;
   }
 
-  handleFailure( error ) {
+  handleFailure = ( error ) => {
     console.error( error );
   }
 
-  getUserPlants() {
+  getUserPlants = () => {
     if ( this.state.userData && this.state.userData.uid ) {
-      getPlants( this.state.userData.uid, this.setUserPlants.bind(this), this.handleFailure );
+      getPlants( this.state.userData.uid, this.setUserPlants, this.handleFailure );
     }
   }
 
-  handlePlantAdded( results ) {
-    // console.log( 'results plant added:', results );
+  handlePlantAdded = () => {
     this.getUserPlants();
   }
 
-  componentDidMount() {
-    this.getUserPlants();
+  componentDidMount = () => {
+    if ( Object.keys( this.state.userData ).length === 0 ) {
+      this.getUserSessionAndPlants();
+    } else {
+      this.getUserPlants();
+    }
   }
 
-  deletePlant( plantId ) {
+  deletePlant = ( plantId ) => {
     if ( typeof this.state.userPlants[ plantId ] !== 'undefined' ) {
-      removePlant( this.state.userData.uid, plantId, this.getUserPlants.bind( this ), this.handleFailure.bind(this) );
+      removePlant( this.state.userData.uid, plantId, this.getUserPlants, this.handleFailure );
     }
   }
 
@@ -73,7 +85,7 @@ class PlantsPage extends React.Component {
         <div id="app-view" className="plants-list w-full flex-1">
           <div className="py-2 pb-24 lg:py-12 xl:py-20">
             <div className="max-w-lg mx-auto bg-grey-lighter border border-grey-light shadow py-4 px-6">
-              <AddPlantForm userId={ this.state.userData.uid } success={ this.handlePlantAdded.bind( this ) } />
+              <AddPlantForm userId={ this.state.userData.uid } success={ this.handlePlantAdded } />
               <div className="plantList">
                 <small className="text-grey-dark">
                   Tap <svg
