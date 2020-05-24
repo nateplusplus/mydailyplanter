@@ -25,3 +25,12 @@ export const makePlantObjectFromData = ( plantName ) => {
         name     : plantName
     }
 }
+
+export const removePlant = ( userId, plantId, success, fail ) => {
+    firebase
+        .database()
+        .ref( 'Plants/' + userId + '/' + plantId )
+        .remove()
+        .then( success )
+        .catch( fail );
+}

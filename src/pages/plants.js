@@ -5,7 +5,7 @@ import PageWrapper from "../components/pageWrapper"
 import SEO from "../components/seo"
 import AddPlantForm from '../components/addPlantForm'
 import PlantListItem from "../components/plantListItem"
-import { getPlants } from "../services/userplants"
+import { getPlants, removePlant } from "../services/userplants"
 
 import "../sass/main.scss";
 
@@ -35,7 +35,7 @@ class PlantsPage extends React.Component {
     if ( this.state.userPlants && Object.keys( this.state.userPlants ).length > 0 ) {
       for ( var index in this.state.userPlants ) {
         let plant = this.state.userPlants[index];
-        plantList.push(<PlantListItem key={index} plantId={index} name={plant.name} />);
+        plantList.push(<PlantListItem key={index} plantId={index} name={plant.name} deletePlant={ this.deletePlant.bind( this ) } />);
       }
     }
     return plantList;
@@ -56,8 +56,14 @@ class PlantsPage extends React.Component {
     this.getUserPlants();
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getUserPlants();
+  }
+
+  deletePlant( plantId ) {
+    if ( typeof this.state.userPlants[ plantId ] !== 'undefined' ) {
+      removePlant( this.state.userData.uid, plantId, this.getUserPlants.bind( this ), this.handleFailure.bind(this) );
+    }
   }
 
   render () {

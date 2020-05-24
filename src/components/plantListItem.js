@@ -4,8 +4,9 @@ import PropTypes from "prop-types"
 import { createPlantLog, getPlantLogsByPlantId, getLastWateredLog } from "../services/plantlogs"
 
 const defaultState = {
-    lastWatered : 'Never', //'Jan 27th, 2020'
-    plantLogs   : {}
+    lastWatered  : 'Never', //'Jan 27th, 2020'
+    plantLogs    : {},
+    showDropdown : false
 } 
 
 class PlantListItem extends Component {
@@ -56,12 +57,22 @@ class PlantListItem extends Component {
         }
     }
 
+    toggleDropdown() {
+        this.setState({ showDropdown : ! this.state.showDropdown });
+    }
+
+    handleDelete() {
+        this.props.deletePlant( this.props.plantId );
+    }
+
     componentDidMount() {
         this.getPlantLogs();
         this.getLastWateredLog();
     }
 
     render() {
+        const dropdownClass = this.state.showDropdown ? '' : 'hidden';
+
         return (
             <div className="list-item">
                 <div className="list-item-body">
@@ -90,10 +101,14 @@ class PlantListItem extends Component {
                         </small>
                     </div>
                     <div className="list-item-actions">
-                        <button className="dropdown-toggle" type="button">
+                        <button
+                            className="dropdown-toggle"
+                            type="button"
+                            onClick={ this.toggleDropdown.bind( this ) }
+                        >
                             <span className="leading-normal">...</span>
                         </button>
-                        <div className="dropdown-menu hidden">
+                        <div className={ "dropdown-menu " + dropdownClass }>
                             <ul className="list-reset">
                                 <li className="py-2 ml:hidden">
                                     <a className="cursor-pointer px-4 py-2 hover:text-grey-darker">Info</a>
@@ -102,7 +117,12 @@ class PlantListItem extends Component {
                                     <a className="cursor-pointer px-4 py-2 hover:text-grey-darker">Edit</a>
                                 </li>
                                 <li className="py-2">
-                                    <a className="cursor-pointer px-4 hover:text-grey-darker">Delete</a>
+                                    <a
+                                        className="cursor-pointer px-4 hover:text-grey-darker"
+                                        onClick={ this.handleDelete.bind( this ) }
+                                    >
+                                        Delete
+                                    </a>
                                 </li>
                             </ul>
                         </div>  
