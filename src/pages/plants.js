@@ -1,5 +1,5 @@
 import React from "react"
-// import { Link } from "gatsby"
+import { navigate } from "gatsby"
 
 import PageWrapper from "../components/pageWrapper"
 import SEO from "../components/seo"
@@ -30,6 +30,8 @@ class PlantsPage extends React.Component {
           this.setState({ userData : decoded }, this.getUserPlants );
         }
       } );
+    } else {
+      navigate(`/`);
     }
   }
 

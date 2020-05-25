@@ -8,9 +8,11 @@ import useSiteMetadata from '../hooks/useSiteMetadata'
 const PageWrapper = ( {children} ) => {
     const { site, siteLogo } = useSiteMetadata();
     return(
-        <Layout metadata={{ site, siteLogo }}>
-            { children }
-        </Layout>
+        <div className="site-container">
+            <Layout metadata={{ site, siteLogo }}>
+                { children }
+            </Layout>
+        </div>
     )
 }
 

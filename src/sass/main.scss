@@ -91,12 +91,9 @@
   @apply bg-grey-lightest min-h-screen flex flex-col items-stretch;
 }
 
-#page-home,
-#app-view,
-#page-contact,
-#page-404,
-#page-forgot-password,
-#page-reset-password {
+.page-background {
+  min-height: calc( 100vh - 155px );
+
   background: #fafbfb url(../images/dp-plants-bg-sm.png) center bottom no-repeat;
   background-size: contain;
 

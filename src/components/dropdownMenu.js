@@ -10,16 +10,16 @@ const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
 				<li role="none" className="py-1">
 					<Link to="/plants">My Plants</Link>
 				</li>
-				<li role="none" className="py-1">
+				{/* <li role="none" className="py-1">
 					<a href="#settings" role="menuitem"><span className="alert-flag alert-flag-active"></span>Settings</a>
-				</li>
+				</li> */}
 				<li role="none" className="py-1">
-					<a href="#logout" role="menuitem">Logout</a>
+					<Link to="/logout">Logout</Link>
 				</li>
-				<li role="none" className="py-1 list-separator"></li>
-				<li role="none" className="py-1">
+				{/* <li role="none" className="py-1 list-separator"></li> */}
+				{/* <li role="none" className="py-1">
 					<a href="#help" role="menuitem">Help</a>
-				</li>
+				</li> */}
 			</ul>
 		)
 	} else {
@@ -31,10 +31,10 @@ const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
 				<li role="none" className="py-1">
 					<a href="#signin" role="menuitem" onClick={ () => toggleModal( 'signin' ) }>Sign In</a>
 				</li>
-				<li role="none" className="py-1 list-separator"></li>
+				{/* <li role="none" className="py-1 list-separator"></li>
 				<li role="none" className="py-1">
 					<a href="#help" role="menuitem">Help</a>
-				</li>
+				</li> */}
 			</ul>
 		)
 	}

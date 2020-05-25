@@ -6,12 +6,15 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-const Modal = ({ children, title, isToggled, handleClose, name }) => {
+const Modal = ({ children, title, isToggled, handleClose, name, isLoading }) => {
 
   var modalClass = "modal modal-background";
   var modalContainerClass = "modal-container";
   if ( isToggled ) {
     modalContainerClass += " drop-enter";
+  } else if ( isLoading ) {
+    modalClass += " modal-hidden";
+    modalContainerClass += " hidden";
   } else {
     modalClass += " modal-hidden";
     modalContainerClass += " drop-leave";

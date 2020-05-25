@@ -26,7 +26,8 @@ class Layout extends Component {
       modalData      : {
         name  : 'signin',
         title : 'Sign In'
-      }
+      },
+      isLoading      : true,
     }
   }
 
@@ -64,7 +65,9 @@ class Layout extends Component {
     if ( userSession ) {
       try {
         var userData = jwt.verify( userSession, process.env.JWT_KEY );
-        this.setState({ userData : userData });
+        this.setState({
+          userData  : userData
+        });
       } catch ( error ) {
         console.warn( 'Your session has expired. Please log in again.' );
       }
@@ -73,6 +76,13 @@ class Layout extends Component {
 
   componentDidMount = () => {
     this.getUserSession();
+
+    // Give some components time to load first
+    window.setTimeout( function() {
+      this.setState({
+        isLoading : false
+      });
+    }.bind(this), 700 );
   }
 
   render() {
@@ -89,6 +99,7 @@ class Layout extends Component {
           handleClose={ this.toggleModal }
           title={ this.state.modalData.title }
           name={ this.state.modalData.name }
+          isLoading={ this.state.isLoading }
         >
           { form }
         </Modal>
@@ -98,7 +109,7 @@ class Layout extends Component {
           toggleModal={ this.toggleModal }
           userData={ this.state.userData }
         />
-        <main>{ this.props.children }</main>
+        <main className="page-background">{ this.props.children }</main>
         <footer>
           © {new Date().getFullYear()} Nathan Blair
         </footer>
