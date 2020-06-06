@@ -3,10 +3,13 @@ import PropTypes from "prop-types"
 
 import { createPlantLog, getPlantLogsByPlantId, getLastWateredLog } from "../services/plantlogs"
 
+import moment from 'moment';
+
 const defaultState = {
     lastWatered  : 'Never', //'Jan 27th, 2020'
     plantLogs    : {},
-    showDropdown : false
+    showDropdown : false,
+    daysFromNow  : 0
 } 
 
 class PlantListItem extends Component {
@@ -43,18 +46,25 @@ class PlantListItem extends Component {
 
     setLastWatered( results ) {
         let dateString = defaultState.lastWatered;
+        let lastWateredDate = '';
 
         if ( results ) {
             const keys        = Object.keys( results );
             const lastWatered = results[ keys[0] ];
             if ( lastWatered && lastWatered.hasOwnProperty( 'created' ) ) {
-                let date = new Date( lastWatered.created );
-                dateString = date.toDateString();
+                lastWateredDate = lastWatered.created;
+                dateString      = moment( lastWatered.created ).fromNow();
             }
         }
+
         if ( this.state.lastWatered !== dateString ) {
-            this.setState( { lastWatered : dateString });
+            this.setState( {
+                lastWatered : dateString,
+            });
         }
+
+        const daysFromNow = ( this.state.lastWatered !== 'Never' ) ? moment().diff( lastWateredDate, 'days') : -1;
+        this.setState( { daysFromNow : daysFromNow } );
     }
 
     toggleDropdown() {
@@ -72,6 +82,7 @@ class PlantListItem extends Component {
 
     render() {
         const dropdownClass = this.state.showDropdown ? '' : 'hidden';
+        const dropletClass  = this.state.daysFromNow === 0 ? '' : 'svg-unfill';
 
         return (
             <div className="list-item">
@@ -81,7 +92,7 @@ class PlantListItem extends Component {
                         onClick={ this.handleWaterAction.bind( this ) }
                     >
                         <svg
-                            className="w-8 h-8 stroke-current fill-current text-blue svg-unfill"
+                            className={ "w-8 h-8 stroke-current fill-current text-blue " + dropletClass }
                             alt="Click to water plant"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"

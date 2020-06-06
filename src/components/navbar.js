@@ -48,7 +48,7 @@ class Navbar extends React.Component {
             <h1>{ this.props.siteTitle }</h1>
           </Link>
         </div>
-        <div className="relative alert-flag alert-flag-active">
+        <div className="relative alert-flag">
           <button onClick={ this.toggleNav } className="w-6 h-6">
             <img src={ menuIcon } alt="toggle the navigation menu" />
           </button>
