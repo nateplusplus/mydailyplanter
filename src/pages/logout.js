@@ -1,6 +1,6 @@
 import React from "react"
 import { navigate } from "gatsby"
-import PageWrapper from "../components/pageWrapper"
+import Layout from "../components/layout"
 
 class LogoutPage extends React.Component {
   constructor( props ) {
@@ -19,7 +19,7 @@ class LogoutPage extends React.Component {
 
   render() {
       return(
-          <PageWrapper></PageWrapper>
+          <Layout></Layout>
       )
   }
 }

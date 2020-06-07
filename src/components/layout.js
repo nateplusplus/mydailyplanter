@@ -5,9 +5,8 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React, { Component } from "react"
-import PropTypes from "prop-types"
-import { navigate } from "gatsby"
+import React from "react"
+import { StaticQuery, navigate, graphql } from "gatsby"
 
 import Navbar from "./navbar"
 import Login from "./login"
@@ -16,32 +15,43 @@ import Modal from "./modal"
 
 var jwt = require('jsonwebtoken');
 
-class Layout extends Component {
+const modalDefaults = {
+  name  : 'signin',
+  title : 'Sign In',
+  body  : ''
+}
+
+class Layout extends React.Component {
 
   constructor( props ) {
     super(props)
     this.state = {
       modalIsToggled : false,
       userData       : {},
-      modalData      : {
-        name  : 'signin',
-        title : 'Sign In'
-      },
+      modalData      : modalDefaults,
       isLoading      : true,
     }
   }
 
-  toggleModal = ( name ) => {
+  toggleModal = ( name, title, body ) => {
 
-    let modalData = {
-      name  : name,
-      title : 'Sign In'
-    }
+    // Default data
+    let modalData = modalDefaults;
 
+    modalData.name  = name  || this.state.modalData.name;
+    modalData.title = title || this.state.modalData.title;
+    modalData.body  = body  || this.state.modalData.body;
+
+    // TODO: leaving for backwards compatiblitiy - Refactor this.
     if ( name === 'signup' ) {
-      modalData.title = 'Sign Up'
+      modalData.title = 'Sign Up';
+      modalData.body  = <SignUp handleLogin={ this.handleLogin } />
+    } else if ( name === 'signin' ) {
+      modalData.title = 'Sign In';
+      modalData.body  = <Login handleLogin={ this.handleLogin } />
     }
 
+    // Setup modal with data, which will trigger the toggle action
     this.setState({
       modalIsToggled : !this.state.modalIsToggled,
       modalData      : modalData
@@ -87,11 +97,6 @@ class Layout extends Component {
 
   render() {
 
-    let form = <Login handleLogin={ this.handleLogin } />
-    if ( this.state.modalData.name === 'signup' ) {
-      form = <SignUp handleLogin={ this.handleLogin } />
-    }
-
     return (
       <>
         <Modal
@@ -101,25 +106,46 @@ class Layout extends Component {
           name={ this.state.modalData.name }
           isLoading={ this.state.isLoading }
         >
-          { form }
+          { this.state.modalData.body }
         </Modal>
-        <Navbar
-          siteTitle={ this.props.metadata.site.siteMetadata.title }
-          siteLogo={ this.props.metadata.siteLogo.childImageSharp.fixed }
-          toggleModal={ this.toggleModal }
-          userData={ this.state.userData }
+        <StaticQuery
+          query={graphql`
+            query SiteDataQuery {
+              site {
+                siteMetadata {
+                  title
+                }
+              }
+              siteLogo: file(relativePath: { eq: "logo1-sm.png" }) {
+                childImageSharp {
+                  fixed( height: 36 ) {
+                    ...GatsbyImageSharpFixed
+                  }
+                }
+              }
+            }`
+          }
+          render={
+            data => <Navbar
+              siteTitle={ data.site.siteMetadata.title }
+              siteLogo={ data.siteLogo.childImageSharp.fixed }
+              toggleModal={ this.toggleModal }
+              userData={ this.state.userData }
+            />
+          }
         />
-        <main className="page-background">{ this.props.children }</main>
+        
+        <main className="page-background">{
+          React.Children.map( this.props.children, child => {
+            return React.cloneElement( child, { toggleModal: this.toggleModal } );
+          } )
+        }</main>
         <footer>
           © {new Date().getFullYear()} Nathan Blair
         </footer>
       </>
     )
   }
-}
-
-Layout.propTypes = {
-  metadata: PropTypes.object.isRequired
 }
 
 export default Layout

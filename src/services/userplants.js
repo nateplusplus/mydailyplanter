@@ -34,3 +34,13 @@ export const removePlant = ( userId, plantId, success, fail ) => {
         .then( success )
         .catch( fail );
 }
+
+export const handleEditPlant = ( state, success, fail ) => {
+    firebase
+        .database()
+        .ref( 'Plants/' + state.userId + '/' + state.plantId )
+        .child( 'name' )
+        .set( state.name )
+        .then( success )
+        .catch( fail )
+}

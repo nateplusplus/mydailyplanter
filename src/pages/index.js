@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 
-import PageWrapper from "../components/pageWrapper"
+import Layout from "../components/layout"
 import SEO from "../components/seo"
 
 import "../sass/main.scss";
@@ -31,7 +31,7 @@ class IndexPage extends React.Component {
       ctaClass = '';
     }
     return(
-      <PageWrapper>
+      <Layout>
         <SEO title="Home" />
         <div>
           <section>
@@ -97,7 +97,7 @@ class IndexPage extends React.Component {
             </div>
           </section>
         </div>
-      </PageWrapper>
+      </Layout>
     );
   }
 }

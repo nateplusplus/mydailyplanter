@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 
 import { createPlantLog, getPlantLogsByPlantId, getLastWateredLog } from "../services/plantlogs"
+import EditPlant from '../components/editPlant';
 
 import moment from 'moment';
 
@@ -75,6 +76,17 @@ class PlantListItem extends Component {
         this.props.deletePlant( this.props.plantId );
     }
 
+    handlePlantModal = () => {
+        const modalBody = <EditPlant
+                            name={ this.props.name }
+                            handleSuccess={ this.props.handleUpdate }
+                            userId={ this.props.userId }
+                            plantId={ this.props.plantId }
+                        />
+
+        this.props.toggleModal( 'plant', 'Edit Plant', modalBody );
+    }
+
     componentDidMount() {
         this.getPlantLogs();
         this.getLastWateredLog();
@@ -104,7 +116,7 @@ class PlantListItem extends Component {
                         </svg>
                     </div>
                     <div className="list-item-text">
-                        <div className="cursor-pointer">
+                        <div className="cursor-pointer" onClick={ this.handlePlantModal }>
                             { this.props.name }
                         </div>
                         <small className="text-grey-darker">
@@ -125,7 +137,12 @@ class PlantListItem extends Component {
                                     <a className="cursor-pointer px-4 py-2 hover:text-grey-darker">Info</a>
                                 </li>
                                 <li className="py-2">
-                                    <a className="cursor-pointer px-4 py-2 hover:text-grey-darker">Edit</a>
+                                    <a
+                                        className="cursor-pointer px-4 py-2 hover:text-grey-darker"
+                                        onClick={ this.handlePlantModal }
+                                    >
+                                        Edit
+                                    </a>
                                 </li>
                                 <li className="py-2">
                                     <a
@@ -146,7 +163,7 @@ class PlantListItem extends Component {
 
 PlantListItem.propTypes = {
     name: PropTypes.string.isRequired,
-  }
+}
 
 
 export default PlantListItem
