@@ -11,6 +11,7 @@ import { StaticQuery, navigate, graphql } from "gatsby"
 import Navbar from "./navbar"
 import Login from "./login"
 import SignUp from "./signup"
+import PasswordReset from "./passwordReset"
 import Modal from "./modal"
 
 var jwt = require('jsonwebtoken');
@@ -34,26 +35,52 @@ class Layout extends React.Component {
   }
 
   toggleModal = ( name, title, body ) => {
-
     // Default data
-    let modalData = modalDefaults;
-
-    modalData.name  = name  || this.state.modalData.name;
-    modalData.title = title || this.state.modalData.title;
-    modalData.body  = body  || this.state.modalData.body;
+    let modalData      = this.getModalData( name, title, body );
 
     // TODO: leaving for backwards compatiblitiy - Refactor this.
     if ( name === 'signup' ) {
       modalData.title = 'Sign Up';
-      modalData.body  = <SignUp handleLogin={ this.handleLogin } />
+      modalData.body  = <SignUp handleLogin={ this.handleLogin } toggleModal={ this.toggleModal } />
     } else if ( name === 'signin' ) {
       modalData.title = 'Sign In';
-      modalData.body  = <Login handleLogin={ this.handleLogin } />
+      modalData.body  = <Login handleLogin={ this.handleLogin } toggleModal={ this.toggleModal } />
+    } else if ( name === 'passwordReset' ) {
+      modalData.title = 'Reset Your Password';
+      modalData.body  = <PasswordReset toggleModal={ this.toggleModal } />
     }
 
     // Setup modal with data, which will trigger the toggle action
     this.setState({
-      modalIsToggled : !this.state.modalIsToggled,
+      modalIsToggled : true,
+      modalData      : modalData
+    });
+  }
+
+  getModalData = ( name, title, body ) => {
+    let modalData = modalDefaults;
+
+    if ( name ) {
+      modalData.name  = name;
+    }
+    if ( title ) {
+      modalData.title  = title;
+    }
+    if ( body ) {
+      modalData.body  = body;
+    }
+
+    return modalData;
+  }
+
+  closeModal = ( event ) => {
+    if ( event && event.preventDefault ) {
+      event.preventDefault();
+    }
+
+    let modalData = this.getModalData();
+    this.setState({
+      modalIsToggled : false,
       modalData      : modalData
     });
   }
@@ -101,7 +128,7 @@ class Layout extends React.Component {
       <>
         <Modal
           isToggled={ this.state.modalIsToggled }
-          handleClose={ this.toggleModal }
+          handleClose={ this.closeModal }
           title={ this.state.modalData.title }
           name={ this.state.modalData.name }
           isLoading={ this.state.isLoading }

@@ -56,3 +56,17 @@ export const createUser = ( userData, success, fail ) => {
         fail( error );
     } );
 }
+
+export const sendPasswordPresetEmail = ( email, success, fail ) => {
+    firebase
+        .auth()
+        .sendPasswordResetEmail( email )
+        .then( function() {
+            // email sent
+            success();
+        } )
+        .catch( function( error ) {
+            // uh oh!
+            fail( error );
+        } );
+}

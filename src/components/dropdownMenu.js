@@ -3,6 +3,17 @@ import PropTypes from "prop-types"
 import { Link } from "gatsby"
 
 const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
+
+	const handleSignup = ( event ) => {
+		event.preventDefault();
+		toggleModal( 'signup' )
+	}
+
+	const handleSignin = ( event ) => {
+		event.preventDefault();
+		toggleModal( 'signin' )
+	}
+
 	if ( isLoggedIn ) {
 		return (
 			<ul role="menu" className="list-reset p-3 text-right">
@@ -26,10 +37,10 @@ const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
 		return (
 			<ul role="menu" className="list-reset p-3 text-right">
 				<li role="none" className="py-1">
-					<a href="#signup" role="menuitem" onClick={ () => toggleModal( 'signup' ) }>New Account</a>
+					<a href="#signup" role="menuitem" onClick={ handleSignup }>New Account</a>
 				</li>
 				<li role="none" className="py-1">
-					<a href="#signin" role="menuitem" onClick={ () => toggleModal( 'signin' ) }>Sign In</a>
+					<a href="#signin" role="menuitem" onClick={ handleSignin }>Sign In</a>
 				</li>
 				{/* <li role="none" className="py-1 list-separator"></li>
 				<li role="none" className="py-1">

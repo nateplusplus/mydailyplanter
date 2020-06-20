@@ -1,16 +1,18 @@
 import React from "react"
-import { handleLogin } from "../services/auth"
+import { sendPasswordPresetEmail } from "../services/auth"
 
 const defaultState = {
     username: ``,
-    password: ``,
-    errorCode: '',
 }
 
-class Login extends React.Component {
+class PasswordReset extends React.Component {
     constructor( props ) {
         super(props)
-        this.state = defaultState
+        this.state = {
+            ...defaultState,
+            errorCode: '',
+            errorType: ''
+        }
     }
 
     resetState = () => this.setState( defaultState )
@@ -25,12 +27,14 @@ class Login extends React.Component {
     }
 
     handleSuccess = userData => {
-        this.props.handleLogin( userData );
+        this.setState({
+            errorCode : 'reset-email-sent',
+            errorType : 'success'
+        });
         this.resetState();
     }
 
     handleFailure = errorData => {
-        // TODO: handle common errors on UI: https://firebase.google.com/docs/reference/js/firebase.auth.Error
         this.setState({
             errorCode : errorData.code
         });
@@ -38,33 +42,30 @@ class Login extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault()
-        handleLogin( this.state, this.handleSuccess, this.handleFailure )
+        sendPasswordPresetEmail( this.state.username, this.handleSuccess, this.handleFailure )
     }
 
-    handlePasswordReset = event => {
-        event.preventDefault()
-        this.props.toggleModal( 'passwordReset' )
-    }
-
-    getErrorMessage = () => {
-        var errorMessage = ''
+    getMessage = () => {
+        var message = ''
 
         if ( this.state.errorCode !== '' ) {
             
             switch ( this.state.errorCode ) {
                 case 'auth/invalid-email' :
-                    errorMessage = "The email you have provided is not valid. Please try again."
+                    message = "Invalid email."
                     break
                 case 'auth/user-not-found' :
-                case 'auth/wrong-password' :
-                    errorMessage = "Wrong username or password. Please double-check and try again."
+                    message = "No user found at this email address. Sign up for a new account instead?"
+                    break
+                case 'reset-email-sent' :
+                    message = "An email has been sent to reset your password."
                     break
                 default:
-                    errorMessage = "Something went wrong when attempting to login, please try again or contact support."
+                    message = "Something went wrong when attempting to login, please try again or contact support."
             }
         }
 
-        return errorMessage
+        return message
     }
 
     render() {
@@ -73,48 +74,40 @@ class Login extends React.Component {
         if ( this.state.errorCode === '' ) {
             errorClass = 'hidden'
         }
+
+        var messageClass = 'text-red-light border-red-lighter bg-red-lightest'
+        if ( this.state.errorType === 'success' ) {
+            messageClass = 'text-green-light border-green-lighter bg-green-lightest'
+        }
  
         return (
             <form
                 id="form-signin"
                 method="post"
-                onSubmit={ event => {
-                    this.handleSubmit( event )
-                    // navigate(`/app/profile`)
-                }}
+                onSubmit={ this.handleSubmit }
             >
                 <fieldset className="mb-4">
 
                     <span className={errorClass}>
                         <small
                             id="form-errors"
-                            className="block p-2 w-full mx-auto text-red-light border border-red-lighter bg-red-lightest text-sm"
+                            className={ messageClass + 'block p-2 w-full mx-auto border text-sm' }
                         >
-                            { this.getErrorMessage() }
+                            { this.getMessage() }
                         </small>
                     </span>
+
+                    <p>Type your email below and we will send you a link to safely reset your password.</p>
 
                     <input
                         id="login_email"
                         type="email"
                         name="username"
                         value={ this.state.username }
-                        onChange={this.handleUpdate}
+                        onChange={ this.handleUpdate }
                         placeholder="Email Address"
                         className="input input-v input-full input-lg"
                     />
-
-                    <input
-                        id="login_password"
-                        type="password"
-                        name="password"
-                        value={ this.state.password }
-                        onChange={this.handleUpdate}
-                        placeholder="Your Password"
-                        className="input input-v input-full input-lg"
-                    />
-
-                    <small className="block text-right"><a href="#" onClick={ this.handlePasswordReset }>Forgot Password</a></small>
 
                     <div className="text-center">
                         <button
@@ -122,7 +115,7 @@ class Login extends React.Component {
                             type="submit"
                             className="btn btn-green btn-lg"
                         >
-                            Sign In
+                            Send Password Reset Email
                         </button>
                     </div>
                 </fieldset>
@@ -131,4 +124,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login
+export default PasswordReset

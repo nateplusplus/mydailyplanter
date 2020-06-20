@@ -39,8 +39,10 @@ export const handleEditPlant = ( state, success, fail ) => {
     firebase
         .database()
         .ref( 'Plants/' + state.userId + '/' + state.plantId )
-        .child( 'name' )
-        .set( state.name )
+        .update( {
+            name        : state.name,
+            description : state.description
+        } )
         .then( success )
         .catch( fail )
 }

@@ -47,6 +47,7 @@ class PlantList extends React.Component {
                           plantId={index}
                           userId={ this.state.userData.uid }
                           name={plant.name}
+                          description={plant.description}
                           deletePlant={ this.deletePlant }
                           handleUpdate={ this.handlePlantUpdated }
                           toggleModal={ this.props.toggleModal }

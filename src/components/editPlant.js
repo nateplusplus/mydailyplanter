@@ -5,10 +5,11 @@ class EditPlant extends React.Component {
     constructor( props ) {
         super(props)
         this.state = {
-            userId    : this.props.userId,
-            plantId   : this.props.plantId,
-            name      : this.props.name,
-            errorCode : ''
+            userId      : this.props.userId,
+            plantId     : this.props.plantId,
+            name        : this.props.name,
+            description : this.props.description,
+            errorCode   : ''
         }
     }
 
@@ -55,9 +56,10 @@ class EditPlant extends React.Component {
     componentWillUpdate( prevState ) {
         if ( this.state.plantId !== prevState.plantId ) {
             this.setState( {
-                plantId   : this.props.plantId,
-                name      : this.props.name,
-                errorCode : ''
+                plantId     : this.props.plantId,
+                name        : this.props.name,
+                description : this.props.description,
+                errorCode   : ''
             } );
         }
     }
@@ -87,6 +89,7 @@ class EditPlant extends React.Component {
                         </small>
                     </span>
 
+                    <label>Name</label>
                     <input
                         id="name"
                         type="text"
@@ -96,6 +99,19 @@ class EditPlant extends React.Component {
                         placeholder="Plant Name"
                         className="input input-v input-full input-lg"
                     />
+
+                    <label>Description</label>
+                    <textarea
+                        id="description"
+                        rows="5"
+                        name="description"
+                        value={ this.state.description }
+                        onChange={ this.handleUpdate }
+                        placeholder="General details about your plant"
+                        className="input input-v input-full input-lg"
+                    />
+
+                    <small className="block text-right"><a href="#" onClick={ this.props.togglePlantLog }>Plant Log</a></small>
 
                     <div className="text-center">
                         <button

@@ -46,6 +46,11 @@ class SignUp extends React.Component {
         handleSignup( this.state, this.handleSuccess, this.handleFailure )
     }
 
+    handleSignIn = event => {
+        event.preventDefault()
+        this.props.toggleModal( 'signin' )
+    }
+
     getErrorMessage = () => {
         var errorMessage = ''
 
@@ -163,7 +168,7 @@ class SignUp extends React.Component {
                         </button>
                     </div>
                 </fieldset>
-                <p className="text-center">Do we already know you? <a href="#signin">Sign In</a></p>
+                <p className="text-center">Do we already know you? <a href="#" onClick={ this.handleSignIn }>Sign In</a></p>
             </form>
         )
     }

@@ -2,9 +2,10 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 
 import { createPlantLog, getPlantLogsByPlantId, getLastWateredLog } from "../services/plantlogs"
-import EditPlant from '../components/editPlant';
+import EditPlant from '../components/editPlant'
+import PlantLogList from './plantLogList'
 
-import moment from 'moment';
+import moment from 'moment'
 
 const defaultState = {
     lastWatered  : 'Never', //'Jan 27th, 2020'
@@ -21,28 +22,28 @@ class PlantListItem extends Component {
     }
 
     handleWaterAction() {
-        createPlantLog( this.props.plantId, 'watered', this.handleSuccess.bind( this ), this.handleFailure.bind( this ) );
+        createPlantLog( this.props.plantId, 'watered', this.handleSuccess.bind( this ), this.handleFailure.bind( this ) )
     }
 
     handleSuccess( response ) {
-        this.getPlantLogs();
-        this.getLastWateredLog();
+        this.getPlantLogs()
+        this.getLastWateredLog()
     }
 
     handleFailure( error ) {
-        console.error( 'Error creating plant log: ', error );
+        console.error( 'Error creating plant log: ', error )
     }
 
     setPlantLogs( plantLogs ) {
-        this.setState( { plantLogs } );
+        this.setState( { plantLogs } )
     }
 
     getPlantLogs() {
-        getPlantLogsByPlantId( this.props.plantId, this.setPlantLogs.bind( this ), this.handleFailure.bind( this ) );
+        getPlantLogsByPlantId( this.props.plantId, this.setPlantLogs.bind( this ), this.handleFailure.bind( this ) )
     }
 
     getLastWateredLog() {
-        getLastWateredLog( this.props.plantId, this.setLastWatered.bind( this ), this.handleFailure.bind( this ) );
+        getLastWateredLog( this.props.plantId, this.setLastWatered.bind( this ), this.handleFailure.bind( this ) )
     }
 
     setLastWatered( results ) {
@@ -64,37 +65,57 @@ class PlantListItem extends Component {
             });
         }
 
-        const daysFromNow = ( this.state.lastWatered !== 'Never' ) ? moment().diff( lastWateredDate, 'days') : -1;
-        this.setState( { daysFromNow : daysFromNow } );
+        const daysFromNow = ( this.state.lastWatered !== 'Never' ) ? moment().diff( lastWateredDate, 'days') : -1
+        this.setState( { daysFromNow : daysFromNow } )
     }
 
     toggleDropdown() {
-        this.setState({ showDropdown : ! this.state.showDropdown });
+        this.setState({ showDropdown : ! this.state.showDropdown })
     }
 
     handleDelete() {
-        this.props.deletePlant( this.props.plantId );
+        this.props.deletePlant( this.props.plantId )
     }
 
     handlePlantModal = () => {
+        let description = ''
+        if ( typeof this.props.description !== 'undefined' ) {
+            description = this.props.description
+        }
+
         const modalBody = <EditPlant
                             name={ this.props.name }
+                            description={ description }
                             handleSuccess={ this.props.handleUpdate }
                             userId={ this.props.userId }
                             plantId={ this.props.plantId }
+                            togglePlantLog={ this.togglePlantLog }
                         />
 
-        this.props.toggleModal( 'plant', 'Edit Plant', modalBody );
+        this.props.toggleModal( 'plant', 'Plant Details', modalBody )
+    }
+
+    togglePlantLog = ( event ) => {
+        event.preventDefault()
+
+        const modalBody = <PlantLogList
+                            plantId={ this.props.plantId }
+                            plantLogs={ this.state.plantLogs }
+                            handleSuccess={ this.props.handleUpdate }
+                            togglePlantDetails={ this.handlePlantModal }
+                        />
+
+        this.props.toggleModal( 'plantLog', this.props.name + ' - Log', modalBody )
     }
 
     componentDidMount() {
-        this.getPlantLogs();
-        this.getLastWateredLog();
+        this.getPlantLogs()
+        this.getLastWateredLog()
     }
 
     render() {
-        const dropdownClass = this.state.showDropdown ? '' : 'hidden';
-        const dropletClass  = this.state.daysFromNow === 0 ? '' : 'svg-unfill';
+        const dropdownClass = this.state.showDropdown ? '' : 'hidden'
+        const dropletClass  = this.state.daysFromNow === 0 ? '' : 'svg-unfill'
 
         return (
             <div className="list-item">
