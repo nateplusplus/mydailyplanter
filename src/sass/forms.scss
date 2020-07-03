@@ -53,9 +53,28 @@ textarea {
     @apply text-grey;
   }
   .dropdown-menu {
-    @apply absolute bg-white border rounded z-10 py-2;
+    box-sizing: border-box;
+    position: absolute;
+    background-color: white;
+    border: solid 1px;
+    z-index: 10;
+    border-radius: .25rem;
     right: 0;
     margin-top: -2px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    overflow: hidden;
+
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 150ms ease, max-height 300ms ease-in-out;
+
+    &:focus,
+    &:focus-within {
+      opacity: 1;
+      max-height: 300px;
+      outline: none;
+    }
 
     li {
       @apply text-sm text-center;

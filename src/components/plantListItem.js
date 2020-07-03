@@ -8,10 +8,10 @@ import PlantLogList from './plantLogList'
 import moment from 'moment'
 
 const defaultState = {
-    lastWatered  : 'Never', //'Jan 27th, 2020'
-    plantLogs    : {},
-    showDropdown : false,
-    daysFromNow  : 0
+    lastWatered    : 'Never', //'Jan 27th, 2020'
+    plantLogs      : {},
+    daysFromNow    : 0,
+    dropdownActive : false
 } 
 
 class PlantListItem extends Component {
@@ -21,32 +21,32 @@ class PlantListItem extends Component {
         this.state = defaultState;
     }
 
-    handleWaterAction() {
-        createPlantLog( this.props.plantId, 'watered', this.handleSuccess.bind( this ), this.handleFailure.bind( this ) )
+    handleWaterAction = () => {
+        createPlantLog( this.props.plantId, 'watered', this.handleSuccess, this.handleFailure )
     }
 
-    handleSuccess( response ) {
+    handleSuccess = ( response ) => {
         this.getPlantLogs()
         this.getLastWateredLog()
     }
 
-    handleFailure( error ) {
+    handleFailure = ( error ) => {
         console.error( 'Error creating plant log: ', error )
     }
 
-    setPlantLogs( plantLogs ) {
+    setPlantLogs = ( plantLogs ) => {
         this.setState( { plantLogs } )
     }
 
-    getPlantLogs() {
-        getPlantLogsByPlantId( this.props.plantId, this.setPlantLogs.bind( this ), this.handleFailure.bind( this ) )
+    getPlantLogs = () => {
+        getPlantLogsByPlantId( this.props.plantId, this.setPlantLogs, this.handleFailure )
     }
 
-    getLastWateredLog() {
-        getLastWateredLog( this.props.plantId, this.setLastWatered.bind( this ), this.handleFailure.bind( this ) )
+    getLastWateredLog = () => {
+        getLastWateredLog( this.props.plantId, this.setLastWatered, this.handleFailure )
     }
 
-    setLastWatered( results ) {
+    setLastWatered = ( results ) => {
         let dateString = defaultState.lastWatered;
         let lastWateredDate = '';
 
@@ -69,11 +69,33 @@ class PlantListItem extends Component {
         this.setState( { daysFromNow : daysFromNow } )
     }
 
-    toggleDropdown() {
-        this.setState({ showDropdown : ! this.state.showDropdown })
+    toggleDropdown = ( event ) => {
+        event.preventDefault();
+
+        let dropdownToggle = event.target;
+        if ( ! event.target.classList.contains( 'dropdown-toggle') ) {
+            dropdownToggle = event.target.parentNode;
+        }
+
+        event.stopPropagation();
+        let dropdownMenu  = dropdownToggle.nextElementSibling;
+
+        if ( dropdownMenu && ! this.state.dropdownActive ) {
+            dropdownMenu.setAttribute('tabindex', '0');
+            dropdownMenu.focus();
+        }
     }
 
-    handleDelete() {
+    handleDropdownFocus = ( event ) => {
+        this.setState( { dropdownActive : true } );
+    }
+    handleDropdownBlur = ( event ) => {
+        window.setTimeout( () => {
+            this.setState( { dropdownActive : false } );
+        }, 200);
+    }
+
+    handleDelete = () => {
         this.props.deletePlant( this.props.plantId )
     }
 
@@ -108,21 +130,21 @@ class PlantListItem extends Component {
         this.props.toggleModal( 'plantLog', this.props.name + ' - Log', modalBody )
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         this.getPlantLogs()
         this.getLastWateredLog()
     }
 
     render() {
-        const dropdownClass = this.state.showDropdown ? '' : 'hidden'
         const dropletClass  = this.state.daysFromNow === 0 ? '' : 'svg-unfill'
 
         return (
             <div className="list-item">
                 <div className="list-item-body">
-                    <div
+                    <a
                         className="list-item-icon"
-                        onClick={ this.handleWaterAction.bind( this ) }
+                        onClick={ this.handleWaterAction }
+                        tabIndex='0'
                     >
                         <svg
                             className={ "w-8 h-8 stroke-current fill-current text-blue " + dropletClass }
@@ -135,9 +157,9 @@ class PlantListItem extends Component {
                         >
                             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
                         </svg>
-                    </div>
+                    </a>
                     <div className="list-item-text">
-                        <div className="cursor-pointer" onClick={ this.handlePlantModal }>
+                        <div tabIndex='0' className="cursor-pointer" onClick={ this.handlePlantModal }>
                             { this.props.name }
                         </div>
                         <small className="text-grey-darker">
@@ -148,19 +170,17 @@ class PlantListItem extends Component {
                         <button
                             className="dropdown-toggle"
                             type="button"
-                            onClick={ this.toggleDropdown.bind( this ) }
+                            onClick={ this.toggleDropdown }
                         >
                             <span className="leading-normal">...</span>
                         </button>
-                        <div className={ "dropdown-menu " + dropdownClass }>
+                        <div tabIndex='0' className="dropdown-menu" onFocus={ this.handleDropdownFocus } onBlur={ this.handleDropdownBlur }>
                             <ul className="list-reset">
-                                <li className="py-2 ml:hidden">
-                                    <a className="cursor-pointer px-4 py-2 hover:text-grey-darker">Info</a>
-                                </li>
                                 <li className="py-2">
                                     <a
                                         className="cursor-pointer px-4 py-2 hover:text-grey-darker"
                                         onClick={ this.handlePlantModal }
+                                        tabIndex='0'
                                     >
                                         Edit
                                     </a>
@@ -168,7 +188,8 @@ class PlantListItem extends Component {
                                 <li className="py-2">
                                     <a
                                         className="cursor-pointer px-4 hover:text-grey-darker"
-                                        onClick={ this.handleDelete.bind( this ) }
+                                        onClick={ this.handleDelete }
+                                        tabIndex='0'
                                     >
                                         Delete
                                     </a>

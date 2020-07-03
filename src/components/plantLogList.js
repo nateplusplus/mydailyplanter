@@ -95,11 +95,11 @@ class PlantLogList extends React.Component {
                         </small>
                     </span>
 
-                    <table class="w-full">
+                    <table className="w-full">
                         <thead>
                             <tr>
-                                <th class="text-left w-1/2">Date</th>
-                                <th class="text-left">Value</th>
+                                <th className="text-left w-1/2">Date</th>
+                                <th className="text-left">Value</th>
                             </tr>
                         </thead>
                         <tbody>

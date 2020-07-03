@@ -74,15 +74,16 @@ class Layout extends React.Component {
   }
 
   closeModal = ( event ) => {
-    if ( event && event.preventDefault ) {
+    if ( event.target === event.currentTarget ) {
       event.preventDefault();
-    }
+      event.stopPropagation();
 
-    let modalData = this.getModalData();
-    this.setState({
-      modalIsToggled : false,
-      modalData      : modalData
-    });
+      let modalData = this.getModalData();
+      this.setState({
+        modalIsToggled : false,
+        modalData      : modalData
+      });
+    }
   }
 
   handleLogin = ( userData ) => {

@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import { Link } from "gatsby"
 
-const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
+const DropdownMenu = ( { isLoggedIn, toggleModal, userData, handleFocus, handleBlur } ) => {
 
 	const handleSignup = ( event ) => {
 		event.preventDefault();
@@ -16,7 +16,7 @@ const DropdownMenu = ( { isLoggedIn, toggleModal, userData } ) => {
 
 	if ( isLoggedIn ) {
 		return (
-			<ul role="menu" className="list-reset p-3 text-right">
+			<ul role="menu" className="list-reset p-3 text-right" onFocus={handleFocus} onBlur={handleBlur}>
 				<li className="py-1 mb-2"><b>Hi, { userData.firstname }</b></li>
 				<li role="none" className="py-1">
 					<Link to="/plants">My Plants</Link>

@@ -12,15 +12,29 @@ class Navbar extends React.Component {
   constructor( props ) {
     super(props)
     this.state = {
-      navCollapsed : true,
-      isLoggedIn   : false
+      navCollapsed : false,
+      isLoggedIn   : false,
     }
   }
 
-  toggleNav = () => {
-    this.setState( state => ({
-      navCollapsed : ! state.navCollapsed
-    }))
+  toggleNav = (event) => {
+    event.preventDefault();
+    let navbarMenu = document.querySelector('.navbar-menu');
+
+    if ( navbarMenu && ! this.state.navCollapsed ) {
+      navbarMenu.setAttribute('tabindex', '0');
+      navbarMenu.focus();
+    }
+  }
+
+  handleDropdownFocus = (event) => {
+    this.setState( { navCollapsed : true } );
+  }
+
+  handleDropdownBlur = (event) => {
+    window.setTimeout( () => {
+      this.setState( { navCollapsed : false } );
+    }, 200 );
   }
 
   componentDidUpdate() {
@@ -30,11 +44,6 @@ class Navbar extends React.Component {
   }
 
   render() {
-
-    var menuClass = "navbar-menu";
-    if ( this.state.navCollapsed ) {
-      menuClass += " nav-collapsed";
-    }
 
     return (
       <nav role="menubar" id="navbar">
@@ -52,8 +61,12 @@ class Navbar extends React.Component {
           <button onClick={ this.toggleNav } className="w-6 h-6">
             <img src={ menuIcon } alt="toggle the navigation menu" />
           </button>
-          <div className={ menuClass }>
-            <DropdownMenu isLoggedIn={this.state.isLoggedIn} toggleModal={ this.props.toggleModal } userData={ this.props.userData } />
+          <div className='navbar-menu' onFocus={this.handleDropdownFocus} onBlur={this.handleDropdownBlur}>
+            <DropdownMenu
+              isLoggedIn={this.state.isLoggedIn}
+              toggleModal={ this.props.toggleModal }
+              userData={ this.props.userData }
+            />
           </div>
         </div>
       </nav>

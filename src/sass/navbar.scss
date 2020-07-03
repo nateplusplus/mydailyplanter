@@ -21,7 +21,9 @@
     }
 
   .navbar-menu {
-    @apply absolute bg-grey-lightest shadow w-32 border border-grey-light z-10;
+    position:  absolute;
+    border: 1px solid;
+    @apply bg-grey-lightest shadow w-32 border-grey-light;
     right: 0px;
     margin-top: -2px;
 
@@ -34,16 +36,21 @@
 
 // Styles for nav menu toggling and motion design
 #navbar {
-  .navbar-menu {
-    opacity: 1;
-    max-height: 300px;
-    overflow-y: hidden;
-    transition: opacity 150ms ease, max-height 300ms ease-in-out;
 
-    &.nav-collapsed {
-      max-height: 0;
-      opacity: 0;
-      transition: max-height 300ms ease-in-out, opacity 300ms ease 200ms;
+  .navbar-menu {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 300ms ease-in-out, opacity 300ms ease 200ms;
+
+    &:focus {
+      outline: none;
+    }
+    &:focus-within {
+      opacity: 1;
+      max-height: 300px;
+
+      transition: opacity 150ms ease, max-height 300ms ease-in-out;
     }
   }
 }
