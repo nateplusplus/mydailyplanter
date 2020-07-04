@@ -12,7 +12,9 @@ class PlantList extends React.Component {
     super(props)
     this.state = {
       userData   : {},
-      userPlants : {}
+      userPlants : {},
+      sortBy     : 'date',
+      plantOrder : []
     }
   }
 
@@ -34,28 +36,67 @@ class PlantList extends React.Component {
   setUserPlants = ( plants ) => {
     this.setState( {
       userPlants: plants
-    });
+    }, this.setUserPlantList() );
   }
 
-  getUserPlantList = () => {
+  handleSorting = ( event ) => {
+    this.setState( { sortBy : event.target.value } );
+    this.sortPlants();
+    this.setUserPlantList();
+  }
+
+  sortPlants = () => {
+    var plantsArray = [];
+    let plantIds    = Object.keys( this.state.userPlants );
+    if ( this.state.userPlants && plantIds.length > 0 ) {
+      plantsArray = Object.values( this.state.userPlants );
+      var i = 0;
+      if ( this.state.sortBy === 'name' ) {
+        plantsArray.sort( ( a, b ) => { return this.sortByName( a, b, i, plantIds ) } );
+      } else {
+        plantsArray.sort( ( a, b ) => { return this.sortByDate( a, b, i, plantIds ) } );
+      }
+    }
+    return plantsArray;
+  }
+
+  sortByName = ( a, b, i, plantIds ) => {
+    b.id = plantIds[i];
+    i++;
+
+    let name1 = a.name || '';
+    let name2 = b.name || '';
+    return ( name1 < name2 ) ? -1 : 1;
+  }
+
+  sortByDate = ( a, b, i, plantIds ) => {
+    b.id = plantIds[i];
+    i++;
+
+    let date1 = a.created || '';
+    let date2 = b.created || '';
+    return ( date1 < date2 ) ? -1 : 1;
+  }
+
+  setUserPlantList = () => {
+    let plants = this.sortPlants();
     let plantList = [];
-    if ( this.state.userPlants && Object.keys( this.state.userPlants ).length > 0 ) {
-      for ( var index in this.state.userPlants ) {
-        const plant         = this.state.userPlants[index];
+    if ( plants.length > 0 ) {
+      plants.forEach( ( plant, i ) => {
         plantList.push( <PlantListItem
-                          key={index}
-                          plantId={index}
+                          key={ 'plant_' + plant.id }
+                          plantId={ plant.id }
                           userId={ this.state.userData.uid }
-                          name={plant.name}
-                          description={plant.description}
+                          name={ plant.name }
+                          description={ plant.description }
                           deletePlant={ this.deletePlant }
                           handleUpdate={ this.handlePlantUpdated }
                           toggleModal={ this.props.toggleModal }
                         />
                       );
-      }
+      });
     }
-    return plantList;
+    this.setState( { plantList : plantList } );
   }
 
   handleFailure = ( error ) => {
@@ -99,16 +140,22 @@ class PlantList extends React.Component {
             <AddPlantForm userId={ this.state.userData.uid } success={ this.handlePlantAdded } />
             <div className="plantList">
               <small className="text-grey-dark">
-                Tap <svg
+                {/* Tap <svg
                   className="w-3 h-3 stroke-current fill-current text-blue svg-unfill inline"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                ><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg> to note when you watered each plant.
+                ><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg> to note when you watered each plant. */}
+
+                Sort By <select name="sort" value={ this.state.sortBy } onChange={ this.handleSorting }>
+                  <option value="date">Date Added</option>
+                  <option value="last_watered">Last Watered</option>
+                  <option value="name">Plant Name</option>
+                </select>
               </small>
-              { this.getUserPlantList() }
+              { this.state.plantList }
               <div className="py-2 my-2">
                 <div className="list-item">
                   <div className="list-item-body md:text-center text-grey-dark">
