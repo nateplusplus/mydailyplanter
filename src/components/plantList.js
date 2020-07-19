@@ -11,10 +11,44 @@ class PlantList extends React.Component {
   constructor( props ) {
     super(props)
     this.state = {
-      userData   : {},
-      userPlants : {},
-      sortBy     : 'date',
-      plantOrder : []
+      userData     : {},
+      userPlants   : {},
+      sortBy       : 'created',
+      sortedPlants : []
+    }
+  }
+
+  handlePlantUpdated = () => {
+    this.getUserPlants();
+    this.props.toggleModal();
+  }
+
+  handleWatered = () => {
+    this.sortPlants();
+  }
+
+  handlePlantAdded = () => {
+    this.getUserPlants();
+  }
+
+  deletePlant = ( plantId ) => {
+    if ( typeof this.state.userPlants[ plantId ] !== 'undefined' ) {
+      removePlant( this.state.userData.uid, plantId, this.getUserPlants, this.handleFailure );
+    }
+  }
+
+  componentDidUpdate = ( prevProps, prevState ) => {
+    if ( prevState.sortBy !== this.state.sortBy ) {
+      this.sortPlants();
+    }
+  }
+
+
+  componentDidMount = () => {
+    if ( Object.keys( this.state.userData ).length === 0 ) {
+      this.getUserSessionAndPlants();
+    } else {
+      this.getUserPlants();
     }
   }
 
@@ -23,7 +57,7 @@ class PlantList extends React.Component {
     if ( userSession ) {
       jwt.verify( userSession, process.env.JWT_KEY, ( err, decoded ) => {
         if ( err ) {
-          console.warn( '2 Your session has expired. Please log in again.' );
+          console.warn( 'Your session has expired. Please log in again.' );
         } else {
           this.setState({ userData : decoded }, this.getUserPlants );
         }
@@ -33,54 +67,49 @@ class PlantList extends React.Component {
     }
   }
 
-  setUserPlants = ( plants ) => {
-    this.setState( {
-      userPlants: plants
-    }, this.setUserPlantList() );
+  getUserPlants = () => {
+    if ( this.state.userData && this.state.userData.uid ) {
+      getPlants( this.state.userData.uid, this.setUserPlants, this.handleFailure );
+    }
   }
 
-  handleSorting = ( event ) => {
-    this.setState( { sortBy : event.target.value } );
-    this.sortPlants();
-    this.setUserPlantList();
+  setUserPlants = ( plants ) => {
+    this.setState( { userPlants: plants }, this.sortPlants );
+  }
+
+  handleFailure = ( error ) => {
+    console.error( error );
+  }
+
+  setSortBy = ( sortBy ) => {
+    this.setState( { sortBy : sortBy } );
   }
 
   sortPlants = () => {
     var plantsArray = [];
     let plantIds    = Object.keys( this.state.userPlants );
+
     if ( this.state.userPlants && plantIds.length > 0 ) {
       plantsArray = Object.values( this.state.userPlants );
       var i = 0;
-      if ( this.state.sortBy === 'name' ) {
-        plantsArray.sort( ( a, b ) => { return this.sortByName( a, b, i, plantIds ) } );
-      } else {
-        plantsArray.sort( ( a, b ) => { return this.sortByDate( a, b, i, plantIds ) } );
-      }
+
+      let sortKey = this.state.sortBy;
+
+      plantsArray.sort( ( a, b ) => { return this.sortData( a, b, sortKey ) } );
     }
-    return plantsArray;
+
+    this.setState( { sortedPlants : plantsArray } );
   }
 
-  sortByName = ( a, b, i, plantIds ) => {
-    b.id = plantIds[i];
-    i++;
-
-    let name1 = a.name || '';
-    let name2 = b.name || '';
-    return ( name1 < name2 ) ? -1 : 1;
+  sortData = ( a, b, key ) => {
+    let value1 = a[key] || '';
+    let value2 = b[key] || '';
+    return ( value1 < value2 ) ? -1 : 1;
   }
 
-  sortByDate = ( a, b, i, plantIds ) => {
-    b.id = plantIds[i];
-    i++;
-
-    let date1 = a.created || '';
-    let date2 = b.created || '';
-    return ( date1 < date2 ) ? -1 : 1;
-  }
-
-  setUserPlantList = () => {
-    let plants = this.sortPlants();
+  getSortedPlantList = () => {
     let plantList = [];
+    let plants    = this.state.sortedPlants;
     if ( plants.length > 0 ) {
       plants.forEach( ( plant, i ) => {
         plantList.push( <PlantListItem
@@ -92,45 +121,19 @@ class PlantList extends React.Component {
                           deletePlant={ this.deletePlant }
                           handleUpdate={ this.handlePlantUpdated }
                           toggleModal={ this.props.toggleModal }
+                          handleWatered={ this.handleWatered }
                         />
                       );
       });
     }
-    this.setState( { plantList : plantList } );
+    return plantList;
   }
 
-  handleFailure = ( error ) => {
-    console.error( error );
+  handleSorting = ( event ) => {
+    this.setSortBy( event.target.value );
+    this.sortPlants();
   }
 
-  getUserPlants = () => {
-    if ( this.state.userData && this.state.userData.uid ) {
-      getPlants( this.state.userData.uid, this.setUserPlants, this.handleFailure );
-    }
-  }
-
-  handlePlantUpdated = () => {
-    this.getUserPlants();
-    this.props.toggleModal();
-  }
-
-  handlePlantAdded = () => {
-    this.getUserPlants();
-  }
-
-  componentDidMount = () => {
-    if ( Object.keys( this.state.userData ).length === 0 ) {
-      this.getUserSessionAndPlants();
-    } else {
-      this.getUserPlants();
-    }
-  }
-
-  deletePlant = ( plantId ) => {
-    if ( typeof this.state.userPlants[ plantId ] !== 'undefined' ) {
-      removePlant( this.state.userData.uid, plantId, this.getUserPlants, this.handleFailure );
-    }
-  }
 
   render () {
     return (
@@ -150,12 +153,12 @@ class PlantList extends React.Component {
                 ><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg> to note when you watered each plant. */}
 
                 Sort By <select name="sort" value={ this.state.sortBy } onChange={ this.handleSorting }>
-                  <option value="date">Date Added</option>
+                  <option value="created">Date Added</option>
                   <option value="last_watered">Last Watered</option>
                   <option value="name">Plant Name</option>
                 </select>
               </small>
-              { this.state.plantList }
+              { this.getSortedPlantList() }
               <div className="py-2 my-2">
                 <div className="list-item">
                   <div className="list-item-body md:text-center text-grey-dark">

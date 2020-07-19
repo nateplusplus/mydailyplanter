@@ -1,11 +1,16 @@
 import firebase from "gatsby-plugin-firebase"
 
 export const getPlantLogsByPlantId = ( plantId, success, fail ) => {
-    firebase.database().ref( 'PlantLogs/' + plantId ).once('value').then( function( snapshot ) {
-        success( snapshot.val() );
-    }).catch( function( error ) {
-        fail( error );
-    })
+    firebase
+        .database()
+        .ref( 'PlantLogs/' + plantId )
+        .orderByChild( 'created' )
+        .once('value')
+        .then( function( snapshot ) {
+            success( snapshot.val() );
+        }).catch( function( error ) {
+            fail( error );
+        })
 }
 
 export const createPlantLog = ( plantId, action, success, fail ) => {

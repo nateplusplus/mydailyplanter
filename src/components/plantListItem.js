@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 
 import { createPlantLog, getPlantLogsByPlantId, getLastWateredLog } from "../services/plantlogs"
+import { handleEditPlant } from "../services/userplants"
 import EditPlant from '../components/editPlant'
 import PlantLogList from './plantLogList'
 
@@ -55,7 +56,17 @@ class PlantListItem extends Component {
             const lastWatered = results[ keys[0] ];
             if ( lastWatered && lastWatered.hasOwnProperty( 'created' ) ) {
                 lastWateredDate = lastWatered.created;
-                dateString      = moment( lastWatered.created ).fromNow();
+
+                let plant = {
+                    userId       : this.props.userId,
+                    plantId      : this.props.plantId,
+                    name         : this.props.name,
+                    description  : this.props.description,
+                    last_watered : lastWateredDate
+                }
+                handleEditPlant( plant, this.props.handleWatered, this.handleFailure );
+
+                dateString = moment( lastWatered.created ).fromNow();
             }
         }
 

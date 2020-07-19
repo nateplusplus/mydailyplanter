@@ -165,7 +165,14 @@ class Layout extends React.Component {
         
         <main className="page-background">{
           React.Children.map( this.props.children, child => {
-            return React.cloneElement( child, { toggleModal: this.toggleModal } );
+            let props = {}
+
+            // Don't add props to any DOM elements
+            if ( typeof child.type !== 'string' ) {
+              props = { toggleModal: this.toggleModal };
+            }
+
+            return React.cloneElement( child, props );
           } )
         }</main>
         <footer>

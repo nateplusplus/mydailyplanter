@@ -56,6 +56,12 @@ module.exports = {
           appId: "1:335084839509:web:379b2e86cdc4ecb6e0aadc"
         }
       }
-    }
+    },
+    {
+      resolve: `gatsby-plugin-s3`,
+      options: {
+        bucketName: "www.mydailypanter.com",
+      },
+    },
   ],
 }
